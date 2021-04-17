@@ -10,16 +10,31 @@ import MultipeerConnectivity
 import UIKit
 
 class ViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MCSessionDelegate, MCBrowserViewControllerDelegate {
-	var images = [UIImage]()
+    
+    //MARK: properties
+    
+    var images = [UIImage]()
 
-	var peerID: MCPeerID!
-	var mcSession: MCSession!
-	var mcAdvertiserAssistant: MCAdvertiserAssistant!
+    var peerID: MCPeerID!
+    var mcSession: MCSession!
+    var mcAdvertiserAssistant: MCAdvertiserAssistant!
+    
+    //MARK: actions
+    
+    @IBAction func button(_ sender: UIButton) {
+        print("press")
+    }
+    
+    
+    
+    
+    
+    
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		title = "Selfie Share"
+		title = "Selfie Share dashboard agent"
 
 		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showConnectionPrompt))
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(importPicture))

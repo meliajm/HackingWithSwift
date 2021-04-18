@@ -15,11 +15,23 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 	var peerID: MCPeerID!
 	var mcSession: MCSession!
 	var mcAdvertiserAssistant: MCAdvertiserAssistant!
+//    var labelText = "Camera view"
+//    var notLabelText = "Next"
+//    var receivedData: String = "stop"
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		title = "Selfie Share joiner/camera"
+        
+//        switch receivedData {
+//
+        
+//        case "stop":
+            title = "stop"
+//        default:
+//            title = "ready"
+//        }
+        
+        
 
 		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showConnectionPrompt))
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(importPicture))
@@ -76,16 +88,16 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 
 	@objc func showConnectionPrompt() {
 		let ac = UIAlertController(title: "Connect to others", message: nil, preferredStyle: .actionSheet)
-		ac.addAction(UIAlertAction(title: "Host a session", style: .default, handler: startHosting))
+//		ac.addAction(UIAlertAction(title: "Host a session", style: .default, handler: startHosting))
 		ac.addAction(UIAlertAction(title: "Join a session", style: .default, handler: joinSession))
 		ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(ac, animated: true)
 	}
 
-	func startHosting(action: UIAlertAction) {
-		mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "hws-project25", discoveryInfo: nil, session: mcSession)
-		mcAdvertiserAssistant.start()
-	}
+//	func startHosting(action: UIAlertAction) {
+//		mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "hws-project25", discoveryInfo: nil, session: mcSession)
+//		mcAdvertiserAssistant.start()
+//	}
 
 	func joinSession(action: UIAlertAction) {
 		let mcBrowser = MCBrowserViewController(serviceType: "hws-project25", session: mcSession)
@@ -127,26 +139,44 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 	}
 
 	func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-		if let image = UIImage(data: data) {
-			DispatchQueue.main.async { [unowned self] in
-				self.images.insert(image, at: 0)
-				self.collectionView?.reloadData()
-			}
-		}
+//		if let image = UIImage(data: data) {
+//			DispatchQueue.main.async { [unowned self] in
+//				self.images.insert(image, at: 0)
+//				self.collectionView?.reloadData()
+//			}
+//            print("received data")
+//		}
+//        if let newTitle = (data) {
+//            print(data)
+//        }
+        print(data)
+        let message = NSKeyedUnarchiver.unarchiveObject(with: data) as! String
+//        print(message)
+        if message == "ready" {
+            DispatchQueue.main.async {
+                self.title = message
+            }
+        }
+        
+
+        // unarchive string data
+        // add to title
+        // add to main queue using dispatch queue main asyn
+        // reload title view so it displays
 	}
 
-	func sendImage(img: UIImage) {
-		if mcSession.connectedPeers.count > 0 {
-			if let imageData = img.pngData() {
-				do {
-					try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
-				} catch let error as NSError {
-					let ac = UIAlertController(title: "Send error", message: error.localizedDescription, preferredStyle: .alert)
-					ac.addAction(UIAlertAction(title: "OK", style: .default))
-					present(ac, animated: true)
-				}
-			}
-		}
-	}
+//	func sendImage(img: UIImage) {
+//		if mcSession.connectedPeers.count > 0 {
+//			if let imageData = img.pngData() {
+//				do {
+//					try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
+//				} catch let error as NSError {
+//					let ac = UIAlertController(title: "Send error", message: error.localizedDescription, preferredStyle: .alert)
+//					ac.addAction(UIAlertAction(title: "OK", style: .default))
+//					present(ac, animated: true)
+//				}
+//			}
+//		}
+//	}
 }
 

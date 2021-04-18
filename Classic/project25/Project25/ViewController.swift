@@ -18,17 +18,33 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
     var peerID: MCPeerID!
     var mcSession: MCSession!
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
+    var bool: Bool = true
     
     //MARK: actions
     
     @IBAction func button(_ sender: UIButton) {
         print("press")
+        
+        let message = "ready"
+        let data = NSKeyedArchiver.archivedData(withRootObject: message)
+                       
+        if mcSession.connectedPeers.count > 0 {
+            // 2
+//            if let imageData = image.pngData() {
+                // 3
+                do {
+                    try mcSession.send(data, toPeers: mcSession.connectedPeers, with: .reliable)
+//                    try mcSession.send(bool, toPeers: mcSession.connectedPeers, with: .reliable)
+                    print("button function do and try")
+                    print(data)
+                } catch {
+                    let ac = UIAlertController(title: "Send error", message: error.localizedDescription, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    present(ac, animated: true)
+                }
+//            }
+        }
     }
-    
-    
-    
-    
-    
     
 
 	override func viewDidLoad() {
@@ -80,6 +96,9 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 				// 3
 				do {
 					try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
+//                    try mcSession.send(bool, toPeers: mcSession.connectedPeers, with: .reliable)
+                    print("in image picker controller")
+                    print(imageData)
 				} catch {
 					let ac = UIAlertController(title: "Send error", message: error.localizedDescription, preferredStyle: .alert)
 					ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -92,7 +111,7 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 	@objc func showConnectionPrompt() {
 		let ac = UIAlertController(title: "Connect to others", message: nil, preferredStyle: .actionSheet)
 		ac.addAction(UIAlertAction(title: "Host a session", style: .default, handler: startHosting))
-		ac.addAction(UIAlertAction(title: "Join a session", style: .default, handler: joinSession))
+//		ac.addAction(UIAlertAction(title: "Join a session", style: .default, handler: joinSession))
 		ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(ac, animated: true)
 	}
@@ -102,11 +121,11 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 		mcAdvertiserAssistant.start()
 	}
 
-	func joinSession(action: UIAlertAction) {
-		let mcBrowser = MCBrowserViewController(serviceType: "hws-project25", session: mcSession)
-		mcBrowser.delegate = self
-		present(mcBrowser, animated: true)
-	}
+//	func joinSession(action: UIAlertAction) {
+//		let mcBrowser = MCBrowserViewController(serviceType: "hws-project25", session: mcSession)
+//		mcBrowser.delegate = self
+//		present(mcBrowser, animated: true)
+//	}
 
 	func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
 
@@ -150,18 +169,28 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
 		}
 	}
 
-	func sendImage(img: UIImage) {
-		if mcSession.connectedPeers.count > 0 {
-			if let imageData = img.pngData() {
-				do {
-					try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
-				} catch let error as NSError {
-					let ac = UIAlertController(title: "Send error", message: error.localizedDescription, preferredStyle: .alert)
-					ac.addAction(UIAlertAction(title: "OK", style: .default))
-					present(ac, animated: true)
-				}
-			}
-		}
-	}
+//	func sendImage(img: UIImage) {
+//		if mcSession.connectedPeers.count > 0 {
+//			if let imageData = img.pngData() {
+//				do {
+//					try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
+//                    print("in send Image")
+////                    try mcSession.send(bool, toPeers: mcSession.connectedPeers, with: .reliable)
+//				} catch let error as NSError {
+//					let ac = UIAlertController(title: "Send error", message: error.localizedDescription, preferredStyle: .alert)
+//					ac.addAction(UIAlertAction(title: "OK", style: .default))
+//					present(ac, animated: true)
+//				}
+//			}
+////            switch bool {
+////            case true:
+////                print("var is true")
+////            case false:
+////                print("var is false")
+////            }
+//
+//
+//		}
+//	}
 }
 
